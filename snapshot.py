@@ -189,25 +189,28 @@ class ResourcePrinter(object):
             row = []
             row.append(net['id'])
             row.append(net['name'])
-            for subnet in subnets:
-                if subnet['id'] == net['subnets'][0]:
-                    row.append(subnet['name'])
-                    row.append(net['subnets'][0])
-                    row.append(subnet['cidr'])
-                    row.append(subnet['enable_dhcp'])
-                    dns = ''
-                    for d in subnet['dns_nameservers']:
-                        if len(dns) == 0:
-                            dns = d
-                        else:
-                            dns = ", ".join([dns, d])
-                    row.append(dns)
-
-                    if subnet['allocation_pools'][0]:
-                        row.append("start:%s end:%s" %
-                                   (subnet['allocation_pools'][0]['start'],
-                                    subnet['allocation_pools'][0]['end']))
-
+            if len(net['subnets']):
+                for subnet in subnets:
+                    if subnet['id'] == net['subnets'][0]:
+                        row.append(subnet['name'])
+                        row.append(net['subnets'][0])
+                        row.append(subnet['cidr'])
+                        row.append(subnet['enable_dhcp'])
+                        dns = ''
+                        for d in subnet['dns_nameservers']:
+                            if len(dns) == 0:
+                                dns = d
+                            else:
+                                dns = ", ".join([dns, d])
+                        row.append(dns)
+                        
+                        if subnet['allocation_pools'][0]:
+                            row.append("start:%s end:%s" %
+                                       (subnet['allocation_pools'][0]['start'],
+                                        subnet['allocation_pools'][0]['end']))
+            else:
+                for i in range(0,6):
+                    row.append('N/A')
             networks[net['id']] = net['name']
             table_networks.add_row(row)
 
